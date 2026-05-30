@@ -37,6 +37,7 @@ services:
     expose:
       - "3001"
     labels:
+      - traefik.docker.network=coolify
       - traefik.http.services.command-service.loadbalancer.server.port=3001
     depends_on:
       cqrs-postgres:
@@ -54,6 +55,7 @@ services:
     expose:
       - "3002"
     labels:
+      - traefik.docker.network=coolify
       - traefik.http.services.query-service.loadbalancer.server.port=3002
     depends_on:
       cqrs-postgres:
