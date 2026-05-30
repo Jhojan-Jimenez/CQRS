@@ -37,9 +37,6 @@ services:
     expose:
       - "3001"
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.command-service.rule=Host(`${SERVICE_FQDN_COMMAND_SERVICE}`)
-      - traefik.http.routers.command-service.entrypoints=http
       - traefik.http.services.command-service.loadbalancer.server.port=3001
     depends_on:
       cqrs-postgres:
@@ -57,9 +54,6 @@ services:
     expose:
       - "3002"
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.query-service.rule=Host(`${SERVICE_FQDN_QUERY_SERVICE}`)
-      - traefik.http.routers.query-service.entrypoints=http
       - traefik.http.services.query-service.loadbalancer.server.port=3002
     depends_on:
       cqrs-postgres:
