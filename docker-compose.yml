@@ -9,7 +9,7 @@ services:
     networks:
       - cqrs_net
 
-  postgres:
+  cqrs-postgres:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -42,7 +42,7 @@ services:
       - traefik.http.routers.command-service.entrypoints=http
       - traefik.http.services.command-service.loadbalancer.server.port=3001
     depends_on:
-      postgres:
+      cqrs-postgres:
         condition: service_healthy
     networks:
       - cqrs_net
@@ -62,7 +62,7 @@ services:
       - traefik.http.routers.query-service.entrypoints=http
       - traefik.http.services.query-service.loadbalancer.server.port=3002
     depends_on:
-      postgres:
+      cqrs-postgres:
         condition: service_healthy
     networks:
       - cqrs_net
