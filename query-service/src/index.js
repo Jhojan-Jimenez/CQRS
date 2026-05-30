@@ -18,14 +18,10 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', db: 'postgresql' });
 });
 
-async function main() {
-  await db.connect();
+const port = parseInt(process.env.QUERY_PORT || '3002', 10);
+app.listen(port, () => console.log(`[query] listening on :${port}`));
 
-  const port = parseInt(process.env.QUERY_PORT || '3002', 10);
-  app.listen(port, () => console.log(`[query] listening on :${port}`));
-}
-
-main().catch((err) => {
-  console.error('[query] fatal:', err);
+db.connect().catch((err) => {
+  console.error('[query] db init failed:', err.message);
   process.exit(1);
 });

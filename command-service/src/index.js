@@ -37,15 +37,12 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', db: 'mongodb' });
 });
 
-async function main() {
-  await connect();
-  await synchronizer.start();
+const port = parseInt(process.env.COMMAND_PORT || '3001', 10);
+app.listen(port, () => console.log(`[command] listening on :${port}`));
 
-  const port = parseInt(process.env.COMMAND_PORT || '3001', 10);
-  app.listen(port, () => console.log(`[command] listening on :${port}`));
-}
-
-main().catch((err) => {
-  console.error('[command] fatal:', err);
-  process.exit(1);
-});
+connect()
+  .then(() => synchronizer.start())
+  .catch((err) => {
+    console.error('[command] db init failed:', err.message);
+    process.exit(1);
+  });
