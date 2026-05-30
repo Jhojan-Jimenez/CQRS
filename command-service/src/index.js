@@ -40,9 +40,17 @@ app.get('/health', (_req, res) => {
 const port = parseInt(process.env.COMMAND_PORT || '3001', 10);
 app.listen(port, () => console.log(`[command] listening on :${port}`));
 
-connect()
-  .then(() => synchronizer.start())
-  .catch((err) => {
-    console.error('[command] db init failed:', err.message);
-    process.exit(1);
-  });
+async function initWithRetry() {
+  await connect();
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await synchronizer.start();
+      return;
+    } catch (err) {
+      console.error(`[command] postgres init failed (attempt ${attempt}):`, err.message);
+      await new Promise(r => setTimeout(r, 5000));
+    }
+  }
+}
+
+initWithRetry();
